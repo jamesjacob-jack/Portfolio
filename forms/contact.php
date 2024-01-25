@@ -20,18 +20,39 @@
   } else {
     die( 'Unable to load the "PHP Email Form" Library!');
   }
-
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
   
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+  $toemail = $receiving_email_address;
+  $from_name = $_POST['name'];
+  $from_email = $_POST['email'];
+  $subject = $_POST['subject'];
+  $message = $_POST['message'];
 
   // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
+  
+  $mail = new PHPMailer();
+  $mail->IsSMTP();
+  $mail->SMTPDebug  = 0;
+  $mail->SMTPAuth   = TRUE;
+  $mail->SMTPSecure = "ssl";
+  $mail->Port       = 465;
+  $mail->Host       = "ssl://smtp.gmail.com";
+  $mail->Username   = "jamesjacobraj2001@gmail.com";
+  $mail->Password   = "jslwcveohelzsdms";
+  $mail->IsHTML(true);
+  $mail->AddAddress($toemail);
+  $mail->SetFrom("jamesjacobraj2001@gmail.com");
+  $mail->Subject = $subject;
+  $content = $message;
+  $mail->MsgHTML($content);
 
-  $contact->smtp = array(
+  if (!$mail->Send()) {
+    echo "Error while sending Email.";
+    var_dump($mail);
+} else {
+    echo "Successfully sent";
+    
+}
+  /*$contact->smtp = array(
     'host' => 'ssl://smtp.gmail.com',
     'username' => 'jamesjacobraj2001@gmail.com',
     'password' => 'rufceqafxzygthla',
@@ -41,7 +62,7 @@
 
   $contact->add_message( $_POST['name'], 'From');
   $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
+  $contact->add_message( $_POST['message'], 'Message', 10);*/
 
-  echo $contact->send();
+  //echo $contact->send();
 ?>
